@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Pixels",
-    "slug": "Pixels",
+    "name": "Professional Portfolio",
+    "slug": "professionalportfolio",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
