@@ -1,5 +1,6 @@
-import { ActivityIndicator, Alert, TextInput, View } from 'react-native'
+import { ActivityIndicator, Alert, TextInput, View, ScrollView } from 'react-native'
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { styles } from './style';
 import { Ionicons } from '@expo/vector-icons';
@@ -75,72 +76,74 @@ export default function CreateProfileScreen({navigation}) {
     // ---------- AFFICHAGE ---------- //
     // ------------------------------- //
     return (
+        
+        <SafeAreaView style={styles.containerScreen}>
 
-        <View style={styles.containerScreen}>
+            <ScrollView>
 
-            { isLoading ? 
-                <View>
-                    <ActivityIndicator size="large" color={colors.white} />
+                <View style={styles.containerInput}>
+
+                    { isLoading ? 
+                        <View>
+                            <ActivityIndicator size="large" color={colors.white} />
+                        </View>
+
+                        :
+                    
+                        <View>
+                            <Ionicons name="link" size={50} color={colors.white} />
+                        </View>
+                    }
+
+                    <View>
+                        <TextTitleCustom style={styles.labelTitle}>
+
+                            Création de compte
+
+                        </TextTitleCustom>
+                    </View>
+
+                    <View style={{height:20}}></View>
+
+                    <InputText
+                        onChangeText={setUserFirstName}
+                        placeholder="Renseignez votre nom"
+                        password={false}
+                    />
+
+                    <InputText
+                        onChangeText={setUserLastName}
+                        placeholder="Renseignez votre prénom"
+                        password={false}
+                    />
+
+                    <View style={styles.containerPhoto}>
+                        <InputPhoto
+                            title="Choisir une photo"
+                            setUserPhoto={setUserPhotoUrl}
+                            iconeSize={40}
+                            backgroundColor={colors.white}
+                            colorIcone={colors.primary}
+                        />
+                    </View>
+
+                    <View style={{height:20}}></View>
+
+                    <View style={styles.containerButton}>
+                        <ButtonCustom
+                            title="Valider"
+                            buttonEnabled={true}
+                            colorButton={colors.white}
+                            onPress={handleSubmitDataToFirebase}
+                            stylesLabel={styles.styleLabelButton}
+                        />
+                    </View>
+
                 </View>
 
-                :
-            
-                <View>
-                    <Ionicons name="link" size={50} color={colors.white} />
-                </View>
-            }
+            </ScrollView>
 
-            <View>
-                <TextTitleCustom style={styles.labelTitle}>
-
-                    Création de compte
-
-                </TextTitleCustom>
-            </View>
-
-            <View></View>
-
-            <View style={styles.containerInput}>
-                <TextInput
-                    ref={textInputRef}
-                    style={styles.styleInput}
-                    onChangeText={setUserFirstName}
-                    placeholder='Renseignez votre nom'
-                />
-            </View>
-
-            <View style={styles.containerInput}>
-                <TextInput
-                    ref={textInputRef}
-                    style={styles.styleInput}
-                    onChangeText={setUserLastName}
-                    placeholder='Renseignez votre prénom'
-                />
-            </View>
-
-            <View style={styles.containerPhoto}>
-                <InputPhoto
-                    title="Choisir une photo"
-                    setUserPhoto={setUserPhotoUrl}
-                    iconeSize={40}
-                    backgroundColor={colors.white}
-                    colorIcone={colors.primary}
-                />
-            </View>
-
-            <View style={{height:20}}></View>
-
-            <View style={styles.containerButton}>
-                <ButtonCustom
-                    title="Valider"
-                    buttonEnabled={true}
-                    colorButton={colors.white}
-                    onPress={handleSubmitDataToFirebase}
-                    stylesLabel={styles.styleLabelButton}
-                />
-            </View>
-
-        </View>
+        </SafeAreaView>
     )
     
 };

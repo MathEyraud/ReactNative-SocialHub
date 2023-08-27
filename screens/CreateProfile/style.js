@@ -9,30 +9,23 @@ export const styles = StyleSheet.create({
     containerScreen:{
         flex:1,
 
+        backgroundColor:colors.primary,
+
+        padding:20,
+    },
+
+    containerInput:{
+        flex:1,
+
         justifyContent:'center',
         alignItems:'center',
 
-        backgroundColor:colors.primary,
-
         gap:20,
-        padding:20,
+        marginTop:50,
     },
 
     labelTitle:{
         color:colors.white
-    },
-
-    containerInput:{
-        width:'100%',
-        height:50,
-
-        justifyContent:'center',
-        alignItems:'center',
-
-        backgroundColor:colors.white,
-        borderRadius:borderRadius.Input,
-        paddingHorizontal:20,
-
     },
 
     containerPhoto:{
@@ -46,15 +39,6 @@ export const styles = StyleSheet.create({
     containerButton:{
         width:'100%',
         height:50,
-    },
-
-    styleInput:{
-        width:'100%',
-        height:'100%',
-
-        fontFamily:fonts.PrimaryMedium,
-        fontSize:fontSize.Input,
-        textAlign:'center',
     },
 
     styleLabelButton:{

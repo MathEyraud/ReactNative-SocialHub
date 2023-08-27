@@ -22,31 +22,9 @@ export const styles = StyleSheet.create({
         color:colors.white
     },
 
-    containerInput:{
-        width:'100%',
-        height:50,
-
-        justifyContent:'center',
-        alignItems:'center',
-
-        backgroundColor:colors.white,
-        borderRadius:borderRadius.Input,
-        paddingHorizontal:20,
-
-    },
-
     containerButton:{
         width:'100%',
         height:50,
-    },
-
-    styleInput:{
-        width:'100%',
-        height:'100%',
-
-        fontFamily:fonts.PrimaryMedium,
-        fontSize:fontSize.Input,
-        textAlign:'center',
     },
 
     styleLabelButton:{
