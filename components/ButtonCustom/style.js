@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import fonts from '../../theme/fonts'
+import fontSize from '../../theme/fontSize'
+import borderRadius from '../../theme/borderRadius'
 
 export const styles = StyleSheet.create({
 
@@ -11,11 +13,11 @@ export const styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
 
-        borderRadius:10,    
+        borderRadius:borderRadius.Button,    
     },
 
     label:{
-        fontSize:20,
+        fontSize:fontSize.Button,
         fontFamily: fonts.PrimaryMedium
     },
 

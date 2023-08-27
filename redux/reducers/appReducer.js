@@ -1,5 +1,4 @@
 import USERS_DATA from "../../data/usersData"
-import { createSlice } from "@reduxjs/toolkit"
 import { SET_FAVORITE_USER, SET_FIELDS_SETTINGS } from "../constants"
 
 const initialState = {
@@ -8,7 +7,7 @@ const initialState = {
     selectedFieldsSettings:USERS_DATA,
 }
 
-export default userReducer = (state = initialState, action) => {
+export default usersReducer = (state = initialState, action) => {
 
     switch (action.type) {
         

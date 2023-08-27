@@ -16,6 +16,8 @@ import ButtonCustomIcon from '../../components/ButtonCustomIcon'
 
 export default function HomeScreen({navigation}) {
 
+    const authUser = useSelector(state => state.userPersonnalData);
+
     // -------------------------------- //
     // ---------- NAVIGATION ---------- //
     // -------------------------------- //
@@ -46,7 +48,8 @@ export default function HomeScreen({navigation}) {
     // ---------------------------------------------- //
     // ---------- RECUPERATION DES DONNEES ---------- //
     // ---------------------------------------------- //
-    const selectedFieldsSettings = useSelector(state => state.users.selectedFieldsSettings)
+    const selectedFieldsSettings    = useSelector(state => state.users.selectedFieldsSettings)
+    const userData                  = useSelector(state => state.userPersonnalData)
     //
     //
     //
@@ -105,15 +108,6 @@ export default function HomeScreen({navigation}) {
                         />
                     )}
                 />
-
-                {/*<ButtonCustomIcon
-                    nameIcon="ios-person-add-sharp"
-                    sizeIcon={30}
-                    colorIcon={colors.white}
-                    buttonEnabled={true}
-                    colorButton={colors.success}
-                    stylesPressable={styles.styleButton}
-                    />*/}
     
             </View>
         )

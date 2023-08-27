@@ -1,10 +1,13 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import userReducer from './reducers/appReducer'
+import { configureStore } from '@reduxjs/toolkit'
+
+import usersReducer             from './reducers/appReducer'
+import userPersonnalDataReducer from './reducers/userPersonnalDataReducer'
 
 export default store = configureStore({
 
     reducer: {
-        users : userReducer,
-    }
-    
+        users               : usersReducer,
+        userPersonnalData   : userPersonnalDataReducer,
+    }, 
+
 })

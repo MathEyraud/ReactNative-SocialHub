@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Professional Portfolio",
-    "slug": "professionalportfolio",
+    "slug": "professional-portfolio",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,16 +15,30 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.eyraudmathieu.professionalportfolio"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.eyraudmathieu.professionalportfolio"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "eebe493c-206f-4d56-8908-65723745e189"
+      }
+    },
+    "owner": "eyraudmathieu",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/eebe493c-206f-4d56-8908-65723745e189"
     }
   }
 }

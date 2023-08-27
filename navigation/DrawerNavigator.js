@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { 
+  createDrawerNavigator, 
+  DrawerContentScrollView, 
+  DrawerItemList } from "@react-navigation/drawer";
+
 import { Ionicons } from '@expo/vector-icons';
 
 import BottomTabNavigator from './BottomTabNavigator';
@@ -7,6 +11,9 @@ import FaqScreen          from "../screens/Faq";
   
 import colors             from "../theme/colors";
 import fonts              from '../theme/fonts';
+import DrawerCustom       from '../components/DrawerCustom';
+import fontSize           from '../theme/fontSize';
+
 
 
 const Drawer = createDrawerNavigator();
@@ -17,13 +24,13 @@ export default function DrawerNavigator() {
 
     <Drawer.Navigator 
       initialRouteName="HomeScreen"
-      
+      drawerContent={(props) => <DrawerCustom {...props} />}
       screenOptions={ ({route}) => ({
         
         headerShown:false,
         drawerLabelStyle:{
           fontFamily:fonts.PrimaryBold,
-          fontSize:20,
+          fontSize:fontSize.Primary,
         },
 
         drawerType:"slide",
@@ -44,7 +51,9 @@ export default function DrawerNavigator() {
         },
 
         overlayColor:colors.primary + 'A0',
+
         drawerActiveTintColor : colors.primary,
+        drawerInactiveTintColor : colors.black,
       })}
       
     >

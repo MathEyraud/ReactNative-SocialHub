@@ -6,6 +6,10 @@ import * as SplashScreen from 'expo-splash-screen';
 
 import { NavigationContainer }  from '@react-navigation/native';
 import DrawerNavigator from './navigation/DrawerNavigator';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+import LoginScreen from './screens/Login';
+import CreateProfileScreen from './screens/CreateProfile';
 
 import store from './redux/store';
 import { Provider } from 'react-redux';
@@ -27,6 +31,8 @@ import {
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
+
+const Stack = createNativeStackNavigator()
 
 export default function App() {
 
@@ -68,7 +74,13 @@ export default function App() {
 
       <NavigationContainer>
 
-        <DrawerNavigator/>
+        <Stack.Navigator screenOptions={{headerShown:false}} initialRouteName='Login'>
+
+          <Stack.Screen name="Login"          component={LoginScreen}         />
+          <Stack.Screen name="CreateProfile"  component={CreateProfileScreen} />
+          <Stack.Screen name="Home"           component={DrawerNavigator}     />
+
+        </Stack.Navigator>
 
       </NavigationContainer>
 
