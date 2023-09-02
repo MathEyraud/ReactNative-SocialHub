@@ -7,10 +7,6 @@ export const styles = StyleSheet.create({
         flex:1,
     },
 
-    containerPhoto:{
-
-    },
-
     styleImage:{
         width:'100%',
         resizeMode : 'cover',

@@ -19,8 +19,9 @@ import { actionLogin, actionSignup } from '../../redux/actions/actionAuthUser';
 import LoadingScreen from '../../screens/Loading'
 
 import ASYNCSTORAGE_USER_DATA from '../../utils/AsyncStorage/userData'
-import { getData } from '../../utils/AsyncStorage/storage';
-import { getUserData } from '../../api/firebase/firebaseAuth';
+import { getData, removeAllUserData } from '../../utils/AsyncStorage/storage';
+import { getProfileFirebase, getUserDataFromFirebase } from '../../api/firebase/firebaseAuth';
+import { checkProfile } from '../../redux/actions/actionSetUserData';
 
 export default function LoginScreen({navigation}) {
     
@@ -48,10 +49,6 @@ export default function LoginScreen({navigation}) {
     // ---------- GESTION DES DONNEES UTILISATEUR ---------- //
     // ----------------------------------------------------- //
     const handleSubmitDataToFirebase = async () => {    
-
-        console.log("userEmail",userEmail);
-        console.log("userPassword",userPassword);
-        console.log("userPasswordConfirm",userPasswordConfirm);
 
         if(userEmail.length > 0 && userPassword.length > 0){
             
@@ -84,17 +81,32 @@ export default function LoginScreen({navigation}) {
                 setIsLoading(true)
                 
                 try {
-                    await dispatch( await actionLogin(userEmail,userPassword))
+
+                    //VERIFICATION COMPTE
+                    await dispatch(await actionLogin(userEmail,userPassword))
+
+                    //VERIFICATION PROFIL
+                    const userId = await getData(ASYNCSTORAGE_USER_DATA.FIREBASE_USER_ID);
+                    await dispatch(await checkProfile(userId))
+                    
                     navigation.replace('Home')
 
                 } catch (error) {
+
+                    console.log("catch",error);
+                    
+                    if(error.message === "NoProfile"){
+                        console.log("navigation.replace",);
+                        navigation.replace('CreateProfile')
+                    }
+
                     setError(error.message)
                     setIsLoading(false)
                 }
             }
 
         }else{
-            
+            Alert.alert("Merci de renseigner les informations demandées !")
         }
     }
 
@@ -119,27 +131,36 @@ export default function LoginScreen({navigation}) {
         const userId        = await getData(ASYNCSTORAGE_USER_DATA.FIREBASE_USER_ID   ); //console.log("userId        ",userId        );
         const userTokenDate = await getData(ASYNCSTORAGE_USER_DATA.FIREBASE_TOKEN_DATE); //console.log("userTokenDate ",userTokenDate );
 
-
+        //DONNEES DANS LE TELEPHONE ?
         if(userToken !== (null || undefined) && userId !== (null || undefined)){
 
+            //TOKEN D'AUTHENTICITAION : NOK - PERIMEE
             if( userTokenDate <= new Date()){
 
                     setIsAuth(true)
                     return;
-
+            
+            //TOKEN D'AUTHENTICITAION : OK
             }else{
 
                 const userFirstName = await getData(ASYNCSTORAGE_USER_DATA.FIRST_NAME); //console.log("userFirstName",userFirstName);
                 const userLastName  = await getData(ASYNCSTORAGE_USER_DATA.LAST_NAME ); //console.log("userLastName ",userLastName );
-        
+                
+                //CREATION DE COMPTRE ET PROFIL : OK
                 if (userFirstName !== (null || undefined) && userLastName !== (null || undefined)) {
+
                     navigation.replace('Home');
                     setIsAuth(true);
-
+                
                 } else {
 
-                    const response = await getUserData(userId); //console.log("response",response);
+                    //VERIFICATION DES DONNEES LAS LA BDD
+                    const response = await getProfileFirebase(userId); console.log("response",response);
+                    
+                    //SAUVEGARDER LES DONNEES DANS LE TELEPHONE
+                    //XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 
+                    //CREATION DE COMPTE SANS PROFIL
                     if(response === false){
                         navigation.replace('CreateProfile');
                         setIsAuth(true);
@@ -148,10 +169,11 @@ export default function LoginScreen({navigation}) {
                         navigation.replace('Home');
                         setIsAuth(true);
                     }
-                    
                 }
             }
-            
+        
+        //AUCUNE DONNEES DANS LE TELEPHONE 
+        //L'UTILISATEUR DOIS SE [CONNECTER]/[CREER UN COMPTE]
         }else{
             setIsAuth(true)
         }
@@ -217,11 +239,13 @@ export default function LoginScreen({navigation}) {
                 }
 
                 <Animated.View style={animatedStyles}>
+
                     <TextTitleCustom style={styles.labelTitle}>
 
                         {isSignup ? "Inscription" : "Connexion"}
 
                     </TextTitleCustom>
+                    
                 </Animated.View>
 
                 <View></View>

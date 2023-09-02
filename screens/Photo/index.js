@@ -1,10 +1,13 @@
-import { Text, View, Button, Image, Dimensions } from 'react-native'
+import { View, Image } from 'react-native'
 import React, { useLayoutEffect } from 'react'
 
-import TextCustom from '../../components/Text/TextCustom'
-import TextTitleCustom from '../../components/Text/TextTitleCustom'
+import TextCustom       from '../../components/Text/TextCustom'
+import TextTitleCustom  from '../../components/Text/TextTitleCustom'
+
+import getScreenDimensions from '../../utils/screenDimensions'
 
 import { styles } from './style'
+
 
 export default function PhotoScreen({route, navigation}) {
 
@@ -19,7 +22,7 @@ export default function PhotoScreen({route, navigation}) {
     const colorTextHeader       = data.colorTextHeader
     const colorBackgroundHeader = data.favColor
 
-    const { width: widthScreen, height: heightScreen } = Dimensions.get('window');
+    const screenDimensions = getScreenDimensions()
   //
   //
   //
@@ -73,7 +76,7 @@ export default function PhotoScreen({route, navigation}) {
 
         <Image
           source={{uri : urlImage}}
-          style={[styles.styleImage, {height:widthScreen*(3/4)}]}
+          style={[styles.styleImage, {height:screenDimensions.height*(1/3)}]}
         />
 
       </View>

@@ -1,5 +1,5 @@
-import { ActivityIndicator, Alert, TextInput, View, ScrollView } from 'react-native'
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { ActivityIndicator, Alert, View, ScrollView } from 'react-native'
+import React, { useEffect, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { styles } from './style';
@@ -8,27 +8,30 @@ import colors from '../../theme/colors';
 import ButtonCustom from '../../components/ButtonCustom';
 
 import TextTitleCustom from '../../components/Text/TextTitleCustom';
-import TextCustom from '../../components/Text/TextCustom';
 import { useDispatch } from 'react-redux';
-import { loginFirebaseRealtimeDatabase, sendUserPersonnalData } from '../../api/firebase/firebaseAuth';
-import { storeData } from '../../utils/AsyncStorage/storage';
-import ASYNCSTORAGE_USER_DATA from '../../utils/AsyncStorage/userData'
-import { setUserData } from '../../redux/actions/actionSetUserData';
+import { createProfile, setUserData } from '../../redux/actions/actionSetUserData';
 import InputPhoto from '../../components/InputPhoto';
+
+import ASYNCSTORAGE_USER_DATA from '../../utils/AsyncStorage/userData'
+import { getData } from '../../utils/AsyncStorage/storage';
+import { useLayoutEffect } from 'react';
+import InputText from '../../components/InputText';
 
 export default function CreateProfileScreen({navigation}) {
     
     // ------------------------------------------- //
     // ---------- GESTION DES VARIABLES ---------- //
     // ------------------------------------------- //
-    const [userFirstName,setUserFirstName]  = useState("")
-    const [userLastName ,setUserLastName]   = useState("")
-    const [userPhotoUrl ,setUserPhotoUrl]   = useState(null)
+    const [userFirstName,setUserFirstName   ]   = useState("")
+    const [userLastName ,setUserLastName    ]   = useState("")
+    const [userPhotoUrl ,setUserPhotoUrl    ]   = useState(null)
+    const [userIdAuth   ,setUserIdAuth      ]   = useState(null)
+    const [userEmail    ,setUserEmail       ]   = useState(null)
     
-    const [isSignup     ,setIsSignup]       = useState(true)
-    const [error        ,setError]          = useState(null)
-    const [isLoading    ,setIsLoading]      = useState(false)
-    const [isAuth       ,setIsAuth]         = useState(false)
+    const [isSignup     ,setIsSignup        ]   = useState(true)
+    const [error        ,setError           ]   = useState(null)
+    const [isLoading    ,setIsLoading       ]   = useState(false)
+    const [isAuth       ,setIsAuth          ]   = useState(false)
 
 
 
@@ -48,7 +51,7 @@ export default function CreateProfileScreen({navigation}) {
 
             setIsLoading(true)
 
-            await dispatch(await setUserData(userFirstName,userLastName,userPhotoUrl))
+            await dispatch(await createProfile(userEmail, userIdAuth, userFirstName,userLastName,userPhotoUrl))
 
             navigation.replace('Home')
 
@@ -67,6 +70,17 @@ export default function CreateProfileScreen({navigation}) {
         }
 
     },[error])
+
+    useEffect(async () => {
+
+        const userIdAuthTempo = await getData(ASYNCSTORAGE_USER_DATA.FIREBASE_USER_ID);
+        setUserIdAuth(userIdAuthTempo);
+
+        const userEmailTempo = await getData(ASYNCSTORAGE_USER_DATA.EMAIL);
+        setUserEmail(userEmailTempo);
+
+    }, []);
+      
     //
     //
     //
@@ -98,7 +112,7 @@ export default function CreateProfileScreen({navigation}) {
                     <View>
                         <TextTitleCustom style={styles.labelTitle}>
 
-                            Création de compte
+                            Création de profil
 
                         </TextTitleCustom>
                     </View>

@@ -13,6 +13,10 @@ import colors             from "../theme/colors";
 import fonts              from '../theme/fonts';
 import DrawerCustom       from '../components/DrawerCustom';
 import fontSize           from '../theme/fontSize';
+import ProfileScreen      from '../screens/Profile';
+import NotificationScreen from '../screens/Notification';
+import StackNavigatorProfile from './StackNavigatorProfile';
+
 
 
 
@@ -28,11 +32,11 @@ export default function DrawerNavigator() {
       screenOptions={ ({route}) => ({
         
         headerShown:false,
+
         drawerLabelStyle:{
           fontFamily:fonts.PrimaryBold,
           fontSize:fontSize.Primary,
         },
-
         drawerType:"slide",
         swipeEdgeWidth:100,
 
@@ -43,8 +47,17 @@ export default function DrawerNavigator() {
           if (route.name === 'BottomTabNavigator') {
             iconName = focused ? 'home' : 'home-outline';
 
-          } else if (route.name === 'FaqScreen') {
+          }else if (route.name === 'Faq') {
             iconName = focused ? 'chatbox-ellipses-sharp' : 'chatbox-ellipses-outline';
+
+          }else if (route.name === 'Profile') {
+            iconName = focused ? 'ios-person' : 'ios-person-outline';
+
+          }else if (route.name === 'Notification') {
+            iconName = focused ? 'ios-notifications' : 'ios-notifications-outline';
+            
+          }else if (route.name === 'ProfileRoute') {
+            iconName = focused ? 'ios-person' : 'ios-person-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -67,7 +80,24 @@ export default function DrawerNavigator() {
       />
 
       <Drawer.Screen 
-        name="FaqScreen"       
+        name="ProfileRoute"       
+        component={StackNavigatorProfile}    
+        options={{
+          title:'Profil',
+        }}   
+      />
+
+      <Drawer.Screen 
+        name="Notification"       
+        component={NotificationScreen}    
+        options={{
+          title:'Notification',
+          headerShown:true,
+        }}   
+      />
+
+      <Drawer.Screen 
+        name="Faq"       
         component={FaqScreen}    
         options={{
           title:'FAQ',

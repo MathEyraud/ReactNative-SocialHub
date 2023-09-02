@@ -8,6 +8,14 @@ import fontSize     from '../../theme/fontSize'
 
 export const styles = StyleSheet.create({ 
 
+    container:{
+        gap:10,
+    },
+
+    labelTitle:{
+        paddingLeft:borderRadius.Input,
+    },
+
     containerInput:{
         width:'100%',
         height:50,
@@ -26,6 +34,7 @@ export const styles = StyleSheet.create({
         fontFamily:fonts.PrimaryMedium,
         fontSize:fontSize.Input,
         textAlign:'center',
+        color:colors.primary,
     },
 
 })

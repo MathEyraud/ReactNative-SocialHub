@@ -1,8 +1,10 @@
-import { AUTH_USER, LOGOUT_USER, SET_USER_DATA } from "../constants"
+import { AUTH_USER, LOGOUT_USER, SET_USER_DATA, SET_USER_NEW_PORFILE } from "../constants"
 
 const initialState = {
-    token           : null,
-    userId          : null,
+    userTokenAuth   : null,
+    userIdAuth      : null,
+
+    userEmail       : null,
     userFirstName   : null,
     userLastName    : null,
     userPhoto       : null,
@@ -15,14 +17,22 @@ export default userPersonnalDataReducer = (state = initialState, action) => {
         case AUTH_USER:
 
             return {
-                token           : action.token,
-                userId          : action.userId,
+                userTokenAuth   : action.userTokenAuth,
+                userIdAuth      : action.userIdAuth,
             }
 
         case SET_USER_DATA :
 
             return {
-                userId          : action.userId,
+                userEmail       : action.userEmail,
+                userFirstName   : action.userFirstName,
+                userLastName    : action.userLastName,
+                userPhoto       : action.userPhoto,
+            }
+
+        case SET_USER_NEW_PORFILE :
+
+            return {
                 userFirstName   : action.userFirstName,
                 userLastName    : action.userLastName,
                 userPhoto       : action.userPhoto,

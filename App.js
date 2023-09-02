@@ -78,6 +78,7 @@ export default function App() {
 
           <Stack.Screen name="Login"          component={LoginScreen}         />
           <Stack.Screen name="CreateProfile"  component={CreateProfileScreen} />
+          
           <Stack.Screen name="Home"           component={DrawerNavigator}     />
 
         </Stack.Navigator>

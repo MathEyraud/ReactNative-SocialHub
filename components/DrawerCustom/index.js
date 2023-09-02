@@ -1,6 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer';
-import { View, Text, Image, ActivityIndicator } from 'react-native';
+import { View, Text, Image, ActivityIndicator, Alert } from 'react-native';
+import { CommonActions } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
 import colors from '../../theme/colors';
@@ -26,7 +27,7 @@ export default DrawerCustom = (props) => {
 
     const dispatch = useDispatch();
     
-    const loadUserName = async() => {
+    const loadUserData = async() => {
 
         try {
             setUserFirstName(await getData(ASYNCSTORAGE_USER_DATA.FIRST_NAME    ))
@@ -44,7 +45,7 @@ export default DrawerCustom = (props) => {
     }
 
     useLayoutEffect(() => {
-        loadUserName()
+        loadUserData()
     },[])
     //
     //
@@ -56,11 +57,12 @@ export default DrawerCustom = (props) => {
     // ----------------------------------------------- //
     const handleLogOut = async () => {
 
-        dispatch(actionLogout());
-
         try {
+
+            await dispatch(await actionLogout());
             await removeAllUserData()
-            props.navigation.navigate('Login')
+            props.navigation.dispatch(resetAction);
+            props.navigation.replace('Login')
 
         } catch (error) {
             Alert.alert("Alert", "Il y a eu un problème lors de votre déconnexion !")
@@ -68,6 +70,11 @@ export default DrawerCustom = (props) => {
 
         }
     }
+
+    const resetAction = CommonActions.reset({
+        index: 0, // L'index de la nouvelle route dans la stack
+        routes: [{ name: 'Login' }], // La nouvelle route que vous voulez définir comme point de départ
+    });
     //
     //
     //
@@ -79,59 +86,64 @@ export default DrawerCustom = (props) => {
     return (
         <DrawerContentScrollView {...props}>
 
-        <View style={{ padding: 20 }}>
+            {/* ----- PROFIL ----- */}
+            <View style={{ padding: 20 }}>
 
-            {isDataLoad ? (
+                {isDataLoad ? (
 
-                <>
-                    {!userPhoto ? (
-                        <Image
-                            source={require('../../assets/NoData.png')}
-                            style={styles.styleImage}
-                        />
-                    ) : (
-                        <Image
-                            source={{uri : userPhoto}}
-                            style={styles.styleImage}
-                        />
-                    )}
-                    
-                    <Text style={styles.labelUserName}>
-                        {userFirstName}
-                    </Text>
-                    <Text style={styles.labelUserName}>
-                        {userLastName}
-                    </Text>
-                </>
-    
-            ) : (
+                    <>
+                        {!userPhoto ? (
+                            <Image
+                                source={require('../../assets/NoData.png')}
+                                style={styles.styleImage}
+                            />
+                        ) : (
+                            <Image
+                                source={{uri : userPhoto}}
+                                style={styles.styleImage}
+                            />
+                        )}
+                        
+                        <Text style={styles.labelUserName}>
+                            {userFirstName}
+                        </Text>
+                        <Text style={styles.labelUserName}>
+                            {userLastName}
+                        </Text>
+                    </>
+        
+                ) : (
 
-                <ActivityIndicator size="large" color={colors.primary} />    
+                    <ActivityIndicator size="large" color={colors.primary} />    
 
-            )}
+                )}
+                
+            </View>
+
+
+            {/* ----- ONGLETS ----- */}
+            <DrawerItemList {...props} />
+
             
-        </View>
+            {/* ----- DECONNEXION ----- */}
+            <View style={styles.containerLogOut}>
 
-        <DrawerItemList {...props} />
+                <Ionicons name="log-out-outline" size={24} color="black" />
 
-        <View style={styles.containerLogOut}>
+                <ButtonCustom 
+                    title="Déconnexion"
+                    buttonEnabled={true}
+                    colorButton={"transparent"}
+                    onPress={handleLogOut}
+                    stylesPressable={{
+                        alignItems:'flex-start'
+                    }}
+                    stylesLabel={{
+                        fontFamily:fonts.PrimaryBold,
+                    }}
+                />
 
-            <Ionicons name="log-out-outline" size={24} color="black" />
-
-            <ButtonCustom 
-                title="Déconnexion"
-                buttonEnabled={true}
-                colorButton={"transparent"}
-                onPress={handleLogOut}
-                stylesPressable={{
-                    alignItems:'flex-start'
-                }}
-                stylesLabel={{
-                    fontFamily:fonts.PrimaryBold,
-                }}
-            />
-
-        </View>
+            </View>
 
         </DrawerContentScrollView>
     );

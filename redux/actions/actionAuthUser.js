@@ -1,47 +1,42 @@
 import * as React from 'react';
-import { AUTH_USER, LOGOUT_USER } from "../constants";
-import { loginFirebase, registerFirebase } from '../../api/firebase/firebaseAuth';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { storeData } from '../../utils/AsyncStorage/storage';
-import ASYNCSTORAGE_USER_DATA from '../../utils/AsyncStorage/userData'
+
+import { AUTH_USER, LOGOUT_USER }           from "../constants";
+import { getProfileFirebase, loginFirebase, registerFirebase }  from '../../api/firebase/firebaseAuth';
+
+import { storeData }            from '../../utils/AsyncStorage/storage';
+import ASYNCSTORAGE_USER_DATA   from '../../utils/AsyncStorage/userData'
+import { actionSetUserData }    from './actionSetUserData';
 
 // --------------------------------- //
 // ---------- INSCRIPTION ---------- //
 // --------------------------------- //
-export const actionSignup = async (emailUser, passwordUser) => {
+export const actionSignup = async (userEmail, passwordUser) => {
         
     return async (dispatch) => {
         
-        // --------------------- //
         // ----- DATA SEND ----- // 
-        // --------------------- //
         let response = null
 
         try {
-            response = await registerFirebase(emailUser, passwordUser);
+            response = await registerFirebase(userEmail, passwordUser);
 
         } catch (error) {
             throw error;
         }
                 
-        // -------------------------- //
+
         // ----- REDUX DISPATCH ----- // 
-        // -------------------------- //
         dispatch(actionAuthUser(response.localId, response.idToken))
 
-        // -------------------------- //
-        // ------- SAVE DATA -------- // 
-        // -------------------------- //
-        const timeExpireTokenMilisec = parseInt(response.expiresIn)*1000;
-        const timeExpireTokenDate = new Date().getTime() + timeExpireTokenMilisec;
-        const dateTokenExpire = new Date(timeExpireTokenDate).toISOString();
 
-        saveUserDataFirebase(
-            response.localId, 
-            response.idToken,
-            dateTokenExpire,
-        )
-        
+        // ------- SAVE DATA -------- // 
+        //TRANSFORMATION DU TEMPS RESTANT DU TOKEN
+        const timeExpireTokenMilisec    = parseInt(response.expiresIn)*1000;
+        const timeExpireTokenDate       = new Date().getTime() + timeExpireTokenMilisec;
+        const dateTokenExpire           = new Date(timeExpireTokenDate).toISOString();
+
+        //ENREGISTREMENT DES DONNEES DANS ASYNCSTORAGE
+        await saveUserDataAuthAsyncStorage(userEmail,response.idToken, response.localId, dateTokenExpire )
     }
 };
 //
@@ -52,40 +47,34 @@ export const actionSignup = async (emailUser, passwordUser) => {
 // --------------------------------- //
 // ----------- CONNEXION ----------- //
 // --------------------------------- //
-export const actionLogin = async (emailUser, passwordUser) => {
+export const actionLogin = async (userEmail, userPassword) => {
 
     return async (dispatch) => {
+     
+        let responseAuth = null
 
-        // --------------------- //
-        // ----- DATA SEND ----- // 
-        // --------------------- //
-        let response = null
-
+        // ---- VERIFICATION D'UN COMPTE EXISTANT ---- //
         try {
-            response = await loginFirebase(emailUser, passwordUser);
+            responseAuth = await loginFirebase(userEmail, userPassword);        //console.log("responseAuth",responseAuth);
 
         } catch (error) {
             throw error;
         }
 
-        // -------------------------- //
-        // ----- REDUX DISPATCH ----- // 
-        // -------------------------- //
-        dispatch(actionAuthUser(response.localId, response.idToken));
+        // ----- CREATION DES VARIABLES ----- //
+        const userIdAuth    = responseAuth.localId;
+        const userTokenAuth = responseAuth.idToken;
 
-        // -------------------------- //
-        // ------- SAVE DATA -------- // 
-        // -------------------------- //
-        const timeExpireTokenMilisec = parseInt(response.expiresIn)*1000;
-        const timeExpireTokenDate = new Date().getTime() + timeExpireTokenMilisec;
-        const dateTokenExpire = new Date(timeExpireTokenDate).toISOString();
+        //TRANSFORMATION DU TEMPS RESTANT DU TOKEN
+        const timeExpireTokenMilisec    = parseInt(responseAuth.expiresIn)*1000;
+        const timeExpireTokenDate       = new Date().getTime() + timeExpireTokenMilisec;
+        const dateTokenExpire           = new Date(timeExpireTokenDate).toISOString();
 
-        saveUserDataFirebase(
-            response.localId, 
-            response.idToken,
-            dateTokenExpire,
-        )
-        
+        // ----- REDUX DISPATCH ----- //
+        dispatch(actionAuthUser(userIdAuth, userTokenAuth));
+
+        // ------- SAVE DATA ASYNCSTORAGE-------- // 
+        await saveUserDataAuthAsyncStorage(userEmail,userTokenAuth, userIdAuth, dateTokenExpire)
     }
 };
 //
@@ -93,33 +82,45 @@ export const actionLogin = async (emailUser, passwordUser) => {
 //
 //
 //
-const actionAuthUser = (userId, token) => {
-
-    return {
-        type    : AUTH_USER,
-        userId  : userId,
-        token   : token,
-    }
-}
-//
-//
-//
-//
-//
-const saveUserDataFirebase = async (token, userId, dateTokenExpire) => {
-    
-    await storeData(ASYNCSTORAGE_USER_DATA.FIREBASE_TOKEN       ,token          )
-    await storeData(ASYNCSTORAGE_USER_DATA.FIREBASE_USER_ID     ,userId         )
-    await storeData(ASYNCSTORAGE_USER_DATA.FIREBASE_TOKEN_DATE  ,dateTokenExpire)
-}
-//
-//
-//
-//
-//
-export const actionLogout = () => {
+// ----------------------------------- //
+// ----------- DECONNEXION ----------- //
+// ----------------------------------- //
+export const actionLogout = async () => {
 
     return {
         type : LOGOUT_USER
     }
+}
+//
+//
+//
+//
+//
+// 
+// -------------------------------------- //
+// ----------- STOCKAGE REDUX ----------- //
+// ------------------------------------- //
+const actionAuthUser = (userIdAuth, userTokenAuth) => {
+
+    return {
+        type            : AUTH_USER,
+        userIdAuth      : userIdAuth,
+        userTokenAuth   : userTokenAuth,
+    }
+}
+//
+//
+//
+//
+//
+// --------------------------------------------- //
+// ----------- STOCKAGE ASYNCSTORAGE ----------- //
+// -------------------------------------------- //
+const saveUserDataAuthAsyncStorage = async (userEmail,userIdAuth, userToken,userTokenDate ) => {
+
+    //ENREGISTREMENT DES DONNEES DANS ASYNCSTORAGE
+    await storeData(ASYNCSTORAGE_USER_DATA.EMAIL                ,userEmail      )
+    await storeData(ASYNCSTORAGE_USER_DATA.FIREBASE_TOKEN       ,userIdAuth     )
+    await storeData(ASYNCSTORAGE_USER_DATA.FIREBASE_USER_ID     ,userToken      )
+    await storeData(ASYNCSTORAGE_USER_DATA.FIREBASE_TOKEN_DATE  ,userTokenDate  )
 }

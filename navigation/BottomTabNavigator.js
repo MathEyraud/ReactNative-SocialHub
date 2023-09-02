@@ -17,23 +17,23 @@ export default function BottomTabNavigator() {
     <Tab.Navigator 
         initialRouteName='StackNavigatorHome'
         screenOptions={({ route }) => ({
-            headerShown:false,
-            tabBarShowLabel: false,
-            tabBarIcon: ({ focused, color }) => {
+          headerShown:false,
+          tabBarShowLabel: false,
+          tabBarIcon: ({ focused, color }) => {
 
-              let iconName;
-  
-              if (route.name === 'StackNavigatorHome') {
-                iconName = focused ? 'home' : 'home-outline';
+            let iconName;
 
-              } else if (route.name === 'StackNavigatorFavorite') {
-                iconName = focused ? 'heart-sharp' : 'heart-outline';
-              }
-  
-              return <Ionicons name={iconName} size={30} color={color} />;
-            },
-            tabBarActiveTintColor: colors.primary,
-            tabBarInactiveTintColor: colors.grey,
+            if (route.name === 'StackNavigatorHome') {
+              iconName = focused ? 'home' : 'home-outline';
+
+            } else if (route.name === 'StackNavigatorFavorite') {
+              iconName = focused ? 'heart-sharp' : 'heart-outline';
+            }
+
+            return <Ionicons name={iconName} size={30} color={color} />;
+          },
+          tabBarActiveTintColor: colors.primary,
+          tabBarInactiveTintColor: colors.grey,
         })}
     >
 
